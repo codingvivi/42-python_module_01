@@ -19,17 +19,12 @@ _default:
 
 # run the entry script with the given args
 [group('run')]
-run *args:
-    python3 {{src-dir}}/main.py {{args}}
+run ex:
+    python3 {{src-dir}}/ex{{ex}}/*.py
 
 [group('run')]
-run-presets ex:
-    python3 tools/run.py {{ex}}
-    
-[group('run')]
-run-presets-all:
-    #!/usr/bin/env nu
-    for i in 0..7 { python3 tools/run.py $i}
+run-all:
+  for f in ex*/*.py; do python3 "$f"; done
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # dist
@@ -99,6 +94,5 @@ fclean: clean
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# tools
+# run
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-

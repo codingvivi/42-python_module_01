@@ -5,10 +5,8 @@ class Plant:
         self.age_days: int = age_days
 
     def show(self) -> None:
-        print(f"{self.name}: ")
-        print(f"{self.height_cm} cm,")
-        age_unit_name: str = "day" if self.age_days != 1 else "days"
-        print(f"{self.age_days} {age_unit_name}")
+        age_unit_name: str = "day" if self.age_days == 1 else "days"
+        print(f"{self.name.capitalize()}: {self.height_cm}cm, {self.age_days} {age_unit_name} old")
 
 
 def main() -> None:
