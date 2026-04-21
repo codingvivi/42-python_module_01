@@ -1,0 +1,28 @@
+class Plant:
+    def __init__(self, name, height_cm, age_days) -> None:
+        self.name: str = name
+        self.height_cm: int = height_cm
+        self.age_days: int = age_days
+
+    def show(self) -> None:
+        print(f"{self.name}: ")
+        print(f"{self.height_cm} cm,")
+        age_unit_name: str = "day" if self.age_days != 1 else "days"
+        print(f"{self.age_days} {age_unit_name}")
+
+
+def main() -> None:
+    rose: Plant = Plant("rose", 25, 30)
+    sunflower: Plant = Plant("sunflower", 80, 45)
+    cactus: Plant = Plant("cactus", 15, 120)
+
+    plants: tuple = (rose, sunflower, cactus)
+
+    print("=== Garden Plant Registry ===")
+
+    for p in plants:
+        p.show()
+
+
+if __name__ == "__main__":
+    main()

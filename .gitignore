@@ -1,0 +1,12 @@
+# generated
+__pycache__
+*.py[cod]
+build/
+dist/
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# not mine
+docs/42
