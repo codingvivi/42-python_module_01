@@ -1,5 +1,7 @@
 class Plant:
-    def __init__(self, name: str, height_cm: float, age_days: int, growth_speed: float) -> None:
+    def __init__(
+        self, name: str, height_cm: float, age_days: int, growth_speed: float
+    ) -> None:
         self.name: str = name
         self.height_cm: float = height_cm
         self.age_days: int = age_days
@@ -14,10 +16,11 @@ class Plant:
         print(name_readout, height_readout, age_readout)
 
     def age(self, days: int) -> None:
-        "aging of plant, able to be called without growth since growth of a plant can plateau"
         self.age_days += days
 
-    def grow(self, days: int, growth_rates: tuple[float, ...] | None = None) -> None:
+    def grow(
+        self, days: int, growth_rates: tuple[float, ...] | None = None
+    ) -> None:
         if growth_rates is None:
             growth_rates = (1.0,) * days
 

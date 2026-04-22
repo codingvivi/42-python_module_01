@@ -54,7 +54,9 @@ class Plant:
         growth_speed: float = 0.0,
     ) -> None:
         self.name: str = name
-        self._height: PlantAttr = PlantAttr("height", round(float(height), 1), CM)
+        self._height: PlantAttr = PlantAttr(
+            "height", round(float(height), 1), CM
+        )
         self._age: PlantAttr = PlantAttr("age", age, DAY)
         self.growth_speed: float = growth_speed
         self.show()
@@ -62,14 +64,20 @@ class Plant:
     # ~~~~~~~~ Show ~~~~~~~~
     def show(self) -> None:
         name_readout: str = f"{self.name.capitalize()}:"
-        height_readout: str = f"{float(self._height.value):.1f}{self._height.get_pretty_unit()},"
-        age_readout: str = f"{self._age.value}{self._age.get_pretty_unit()} old"
+        height_readout: str = (
+            f"{float(self._height.value):.1f}{self._height.get_pretty_unit()},"
+        )
+        age_readout: str = (
+            f"{self._age.value}{self._age.get_pretty_unit()} old"
+        )
 
         print(name_readout, height_readout, age_readout)
 
     # @staticmethod
     def _show_attr(self, attr: PlantAttr) -> None:
-        print(f" {attr.name.capitalize()}: {attr.value}{attr.get_pretty_unit()}")
+        print(
+            f" {attr.name.capitalize()}: {attr.value}{attr.get_pretty_unit()}"
+        )
 
     # ~~~~~~~~ Getters ~~~~~~~~
     def get_height(self) -> float:
@@ -95,7 +103,10 @@ class Plant:
             return
         attr: PlantAttr = self.__dict__["_" + name]
         attr.value = value
-        print(f"{name.capitalize()} updated: {attr.value}{attr.get_pretty_unit()}")
+        print(
+            f"{name.capitalize()} updated: "
+            f"{attr.value}{attr.get_pretty_unit()}"
+        )
 
     # @staticmethod
     def _abort_invalid_num(self, name: str, value: int | float) -> bool:
@@ -107,10 +118,11 @@ class Plant:
 
     # ~~~~~~~~ Lifecycle ~~~~~~~~
     def age(self, days: int) -> None:
-        """aging of plant, able to be called without growth since growth of a plant can plateau"""
         self._age.value += days
 
-    def grow(self, days: int, growth_rates: tuple[float, ...] | None = None) -> None:
+    def grow(
+        self, days: int, growth_rates: tuple[float, ...] | None = None
+    ) -> None:
         if growth_rates is None:
             growth_rates = (1.0,) * days
 
@@ -134,7 +146,12 @@ class Plant:
 
 class Flower(Plant):
     def __init__(
-        self, name: str, height: float, age: int, color: str, blooming: bool = False
+        self,
+        name: str,
+        height: float,
+        age: int,
+        color: str,
+        blooming: bool = False,
     ) -> None:
         self.color: PlantAttr = PlantAttr("color", color)
         self.blooming: bool = blooming
@@ -156,7 +173,9 @@ class Flower(Plant):
 
 
 class Tree(Plant):
-    def __init__(self, name: str, height: float, age: int, diameter: float) -> None:
+    def __init__(
+        self, name: str, height: float, age: int, diameter: float
+    ) -> None:
         self.diameter: PlantAttr = PlantAttr("trunk diameter", diameter, CM)
         super().__init__(name, height, age)
 
@@ -192,7 +211,9 @@ class Vegetable(Plant):
         super()._show_attr(self.harvest_season)
         super()._show_attr(self.nutrition)
 
-    def grow(self, days: int, growth_rates: tuple[float, ...] | None = None) -> None:
+    def grow(
+        self, days: int, growth_rates: tuple[float, ...] | None = None
+    ) -> None:
         growth: PlantAttr = PlantAttr("grow and age", days, DAY)
         self._make_print(growth)
         if growth_rates is None:
@@ -210,7 +231,10 @@ class Vegetable(Plant):
         self._increase_nutrition(days)
 
     def _make_print(self, task: PlantAttr) -> None:
-        print(f"[make {self.name} {task.name} for {task.value}{task.get_pretty_unit()}]")
+        print(
+            f"[make {self.name} {task.name} for "
+            f"{task.value}{task.get_pretty_unit()}]"
+        )
 
     def _increase_nutrition(self, days: int) -> None:
         self.nutrition.value += days
@@ -237,7 +261,9 @@ def main() -> None:
     print()
 
     print("=== Vegetable")
-    tomato: Vegetable = Vegetable("tomato", 5.0, 10, "April", 0, growth_speed=2.1)
+    tomato: Vegetable = Vegetable(
+        "tomato", 5.0, 10, "April", 0, growth_speed=2.1
+    )
     tomato.grow(20)
     tomato.show()
 

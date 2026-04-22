@@ -25,7 +25,9 @@ NO_UNIT: Unit = Unit(separator="")
 
 
 class PlantAttr:
-    def __init__(self, name: str, value: int | float | str, unit: Unit = NO_UNIT) -> None:
+    def __init__(
+        self, name: str, value: int | float | str, unit: Unit = NO_UNIT
+    ) -> None:
         self.name: str = name
         self.value: int | float | str = value
         self.unit: Unit = unit
@@ -47,7 +49,9 @@ class PlantAttr:
 class Plant:
     def __init__(self, name: str, height: float, age: int) -> None:
         self.name: str = name
-        self._height: PlantAttr = PlantAttr("height", round(float(height), 1), CM)
+        self._height: PlantAttr = PlantAttr(
+            "height", round(float(height), 1), CM
+        )
         self._age: PlantAttr = PlantAttr("age", age, DAY)
         print("Plant created: ", end="")
         self.show()
@@ -55,8 +59,12 @@ class Plant:
     # ~~~~~~~~ Show ~~~~~~~~
     def show(self) -> None:
         name_readout: str = f"{self.name.capitalize()}:"
-        height_readout: str = f"{float(self._height.value):.1f}{self._height.get_pretty_unit()},"
-        age_readout: str = f"{self._age.value}{self._age.get_pretty_unit()} old"
+        height_readout: str = (
+            f"{float(self._height.value):.1f}{self._height.get_pretty_unit()},"
+        )
+        age_readout: str = (
+            f"{self._age.value}{self._age.get_pretty_unit()} old"
+        )
 
         print(name_readout, height_readout, age_readout)
 
@@ -88,7 +96,10 @@ class Plant:
             return
         attr: PlantAttr = self.__dict__["_" + name]
         attr.value = value
-        print(f"{name.capitalize()} updated: {attr.value}{attr.get_pretty_unit()}")
+        print(
+            f"{name.capitalize()} updated: "
+            f"{attr.value}{attr.get_pretty_unit()}"
+        )
 
     def _abort_invalid_num(self, name: str, value: int | float) -> bool:
         if value < 0:

@@ -6,7 +6,10 @@ class Plant:
 
     def show(self) -> None:
         age_unit_name: str = "day" if self.age_days == 1 else "days"
-        print(f"{self.name.capitalize()}: {self.height_cm}cm, {self.age_days} {age_unit_name} old")
+        print(
+            f"{self.name.capitalize()}: {self.height_cm}cm, "
+            f"{self.age_days} {age_unit_name} old"
+        )
 
 
 def main() -> None:

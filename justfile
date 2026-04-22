@@ -34,8 +34,8 @@ run-all:
 [group('dist')]
 publish tag msg:
     just dist {{tag}}
-    git tag {{tag}} -m "{{msg}}"
-    git push origin HEAD:main --tags
+    just tag {{tag}} {{msg}}
+    git push origin HEAD:refs/heads/main --tags
     gh release create {{tag}} {{dist-dir}}/{{name}}_turnin_{{tag}}.tar.gz
 
 
@@ -60,6 +60,12 @@ checks-dist:
     just test-lint
     @printf '\033[1;32m✓ all checks passed! Ready for submission\n\033[0m\n'
 
+# create tag for latest commit
+[group('dist')]
+tag name msg:
+    #!/usr/bin/env nu
+    if (git tag -l {{name}}| is-empty) {git tag {{name}} -m "{{msg}}"}
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # test
@@ -71,10 +77,20 @@ checks-dist:
 test-mypy:
     uv run mypy --check-untyped-defs {{src-dir}}
 
-# run ruff/flake8 across src/
+# run ruff across src/
 [group('test')]
-test-lint *args:
+test-ruff *args:
     uv run ruff check {{src-dir}} {{args}}
+
+# run flake8 across src/
+[group('test')]
+test-flake8 *args:
+    uv run flake8 {{src-dir}} {{args}}
+
+[group('test')]
+test-lint:
+    just test-ruff
+    just test-flake8
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # clean

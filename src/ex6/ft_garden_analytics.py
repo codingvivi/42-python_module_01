@@ -53,7 +53,9 @@ class Plant:
         growth_speed: float = 0.0,
     ) -> None:
         self.name: str = name
-        self._height: PlantAttr = PlantAttr("height", round(float(height), 1), CM)
+        self._height: PlantAttr = PlantAttr(
+            "height", round(float(height), 1), CM
+        )
         self._age: PlantAttr = PlantAttr("age", age, DAY)
         self.growth_speed: float = growth_speed
         self._init_stats()
@@ -66,7 +68,10 @@ class Plant:
             self._growths = 0
 
         def display(self) -> None:
-            print(f"Stats: {self._growths} grow, {self._agings} age, {self._shows} show")
+            print(
+                f"Stats: {self._growths} grow, "
+                f"{self._agings} age, {self._shows} show"
+            )
 
         def record_shade(self) -> None:
             pass
@@ -81,14 +86,20 @@ class Plant:
     # ~~~~~~~~ Show ~~~~~~~~
     def show(self) -> None:
         name_readout: str = f"{self.name.capitalize()}:"
-        height_readout: str = f"{float(self._height.value):.1f}{self._height.get_pretty_unit()},"
-        age_readout: str = f"{self._age.value}{self._age.get_pretty_unit()} old"
+        height_readout: str = (
+            f"{float(self._height.value):.1f}{self._height.get_pretty_unit()},"
+        )
+        age_readout: str = (
+            f"{self._age.value}{self._age.get_pretty_unit()} old"
+        )
         self._stats._shows += 1
         print(name_readout, height_readout, age_readout)
 
     @staticmethod
     def _show_attr(attr: PlantAttr) -> None:
-        print(f" {attr.name.capitalize()}: {attr.value}{attr.get_pretty_unit()}")
+        print(
+            f" {attr.name.capitalize()}: {attr.value}{attr.get_pretty_unit()}"
+        )
 
     # ~~~~~~~~ Getters ~~~~~~~~
     def get_height(self) -> float:
@@ -114,7 +125,10 @@ class Plant:
             return
         attr: PlantAttr = self.__dict__["_" + name]
         attr.value = value
-        print(f"{name.capitalize()} updated: {attr.value}{attr.get_pretty_unit()}")
+        print(
+            f"{name.capitalize()} updated: "
+            f"{attr.value}{attr.get_pretty_unit()}"
+        )
 
     @staticmethod
     def _abort_invalid_num(name: str, value: int | float) -> bool:
@@ -130,13 +144,16 @@ class Plant:
 
     # ~~~~~~~~ Lifecycle ~~~~~~~~
     def age(self, days: int) -> None:
-        """aging of plant, able to be called without growth since growth of a plant can plateau"""
+        """aging of plant, able to be called without growth
+        since growth of a plant can plateau"""
         if self._abort_invalid_num("days", days):
             return
         self._stats._agings += 1
         self._age.value += days
 
-    def grow(self, days: int, growth_rates: tuple[float, ...] | None = None) -> None:
+    def grow(
+        self, days: int, growth_rates: tuple[float, ...] | None = None
+    ) -> None:
         if growth_rates is None:
             growth_rates = (1.0,) * days
         self._stats._growths += 1
@@ -161,7 +178,12 @@ class Plant:
 # ~~~~~~~~ Flower lineage ~~~~~~~~
 class Flower(Plant):
     def __init__(
-        self, name: str, height: float, age: int, color: str, blooming: bool = False
+        self,
+        name: str,
+        height: float,
+        age: int,
+        color: str,
+        blooming: bool = False,
     ) -> None:
         self.color: PlantAttr = PlantAttr("color", color)
         self.blooming: bool = blooming
@@ -183,7 +205,9 @@ class Flower(Plant):
 
 
 class Seed(Flower):
-    def __init__(self, name: str, height: float, age: int, color: str, seeds: int = 0) -> None:
+    def __init__(
+        self, name: str, height: float, age: int, color: str, seeds: int = 0
+    ) -> None:
         self.seeds: PlantAttr = PlantAttr("seeds", seeds)
         super().__init__(name, height, age, color)
 
@@ -210,7 +234,9 @@ class Tree(Plant):
         def record_shade(self) -> None:
             self._shades += 1
 
-    def __init__(self, name: str, height: float, age: int, diameter: float) -> None:
+    def __init__(
+        self, name: str, height: float, age: int, diameter: float
+    ) -> None:
         self.diameter: PlantAttr = PlantAttr("trunk diameter", diameter, CM)
         super().__init__(name, height, age)
 
@@ -250,7 +276,9 @@ class Vegetable(Plant):
         super()._show_attr(self.harvest_season)
         super()._show_attr(self.nutrition)
 
-    def grow(self, days: int, growth_rates: tuple[float, ...] | None = None) -> None:
+    def grow(
+        self, days: int, growth_rates: tuple[float, ...] | None = None
+    ) -> None:
         growth: PlantAttr = PlantAttr("grow and age", days, DAY)
         self._make_print(growth)
         if growth_rates is None:
@@ -268,7 +296,10 @@ class Vegetable(Plant):
         self._increase_nutrition(days)
 
     def _make_print(self, task: PlantAttr) -> None:
-        print(f"[make {self.name} {task.name} for {task.value}{task.get_pretty_unit()}]")
+        print(
+            f"[make {self.name} {task.name} for "
+            f"{task.value}{task.get_pretty_unit()}]"
+        )
 
     def _increase_nutrition(self, days: int) -> None:
         self.nutrition.value += days
@@ -289,7 +320,9 @@ def display_stats(plant: Plant) -> None:
 def main() -> None:
     print("=== Check year-old")
     print(f"Is 30 days more than a year? -> {Plant.is_older_than_a_year(30)}")
-    print(f"Is 400 days more than a year? -> {Plant.is_older_than_a_year(400)}")
+    print(
+        f"Is 400 days more than a year? -> {Plant.is_older_than_a_year(400)}"
+    )
 
     print("\n=== Flower")
     rose = Flower("Rose", 15.0, 10, "red")
