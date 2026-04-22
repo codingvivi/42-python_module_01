@@ -73,8 +73,8 @@ test-mypy:
 
 # run ruff/flake8 across src/
 [group('test')]
-test-lint:
-    uv run ruff check {{src-dir}}
+test-lint *args:
+    uv run ruff check {{src-dir}} {{args}}
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # clean

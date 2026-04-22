@@ -1,5 +1,5 @@
 class Plant:
-    def __init__(self, name, height_cm, age_days) -> None:
+    def __init__(self, name: str, height_cm: int, age_days: int) -> None:
         self.name: str = name
         self.height_cm: int = height_cm
         self.age_days: int = age_days
@@ -14,7 +14,7 @@ def main() -> None:
     sunflower: Plant = Plant("sunflower", 80, 45)
     cactus: Plant = Plant("cactus", 15, 120)
 
-    plants: tuple = (rose, sunflower, cactus)
+    plants: tuple[Plant, Plant, Plant] = (rose, sunflower, cactus)
 
     print("=== Garden Plant Registry ===")
 

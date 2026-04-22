@@ -2,6 +2,8 @@
 #
 # Plant helpers
 #
+from typing import Any
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -23,9 +25,9 @@ NO_UNIT: Unit = Unit(separator="")
 
 
 class PlantAttr:
-    def __init__(self, name: str, value, unit: Unit = NO_UNIT) -> None:
+    def __init__(self, name: str, value: Any, unit: Unit = NO_UNIT) -> None:
         self.name: str = name
-        self.value = value
+        self.value: Any = value
         self.unit: Unit = unit
 
     def get_pretty_unit(self) -> str:
@@ -65,18 +67,20 @@ class Plant:
 
         print(name_readout, height_readout, age_readout)
 
-    @staticmethod
-    def _show_attr(attr: PlantAttr) -> None:
+    # @staticmethod
+    def _show_attr(self, attr: PlantAttr) -> None:
         print(f" {attr.name.capitalize()}: {attr.value}{attr.get_pretty_unit()}")
 
     # ~~~~~~~~ Getters ~~~~~~~~
     def get_height(self) -> float:
-        return self._get_attr("height")
+        height: float = self._get_attr("height")
+        return height
 
     def get_age(self) -> int:
-        return self._get_attr("age")
+        age: int = self._get_attr("age")
+        return age
 
-    def _get_attr(self, name: str):
+    def _get_attr(self, name: str) -> Any:
         return self.__dict__["_" + name].value
 
     # ~~~~~~~~ Setters ~~~~~~~~
@@ -86,15 +90,15 @@ class Plant:
     def set_age(self, age: int) -> None:
         self._set_attr("age", age)
 
-    def _set_attr(self, name: str, value) -> None:
+    def _set_attr(self, name: str, value: Any) -> None:
         if self._abort_invalid_num(name, value):
             return
         attr: PlantAttr = self.__dict__["_" + name]
         attr.value = value
         print(f"{name.capitalize()} updated: {attr.value}{attr.get_pretty_unit()}")
 
-    @staticmethod
-    def _abort_invalid_num(name: str, value) -> bool:
+    # @staticmethod
+    def _abort_invalid_num(self, name: str, value: int | float) -> bool:
         if value < 0:
             print(f"Error, {name} can't be negative")
             print("Update rejected")
@@ -106,7 +110,7 @@ class Plant:
         """aging of plant, able to be called without growth since growth of a plant can plateau"""
         self._age.value += days
 
-    def grow(self, days: int, growth_rates=None) -> None:
+    def grow(self, days: int, growth_rates: tuple[float, ...] | None = None) -> None:
         if growth_rates is None:
             growth_rates = (1.0,) * days
 
@@ -144,7 +148,7 @@ class Flower(Plant):
         else:
             print(f" {self.name.capitalize()} has not bloomed yet")
 
-    def bloom(self):
+    def bloom(self) -> None:
         if self.blooming is False:
             super()._ask_print("bloom")
             self.blooming = True
@@ -188,7 +192,7 @@ class Vegetable(Plant):
         super()._show_attr(self.harvest_season)
         super()._show_attr(self.nutrition)
 
-    def grow(self, days: int, growth_rates=None) -> None:
+    def grow(self, days: int, growth_rates: tuple[float, ...] | None = None) -> None:
         growth: PlantAttr = PlantAttr("grow and age", days, DAY)
         self._make_print(growth)
         if growth_rates is None:

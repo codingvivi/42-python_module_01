@@ -17,7 +17,7 @@ class Plant:
         "aging of plant, able to be called without growth since growth of a plant can plateau"
         self.age_days += days
 
-    def grow(self, days: int, growth_rates=None) -> None:
+    def grow(self, days: int, growth_rates: tuple[float, ...] | None = None) -> None:
         if growth_rates is None:
             growth_rates = (1.0,) * days
 
@@ -28,7 +28,7 @@ class Plant:
 
 def main() -> None:
 
-    def print_header(title: str):
+    def print_header(title: str) -> None:
         print(f"=== {title} ===")
 
     rose: Plant = Plant("rose", 25, 30, 0.8)

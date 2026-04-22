@@ -14,7 +14,7 @@ class Plant:
 
 
 def main() -> None:
-    plants: tuple = (
+    plants: tuple[Plant, ...] = (
         Plant("rose", 25.0, 30),
         Plant("oak", 200.0, 365),
         Plant("cactus", 5.0, 90),

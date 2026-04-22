@@ -2,6 +2,8 @@
 #
 # Plant helpers
 #
+from typing import Any
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -23,9 +25,9 @@ NO_UNIT: Unit = Unit(separator="")
 
 
 class PlantAttr:
-    def __init__(self, name: str, value, unit: Unit = NO_UNIT) -> None:
+    def __init__(self, name: str, value: int | float | str, unit: Unit = NO_UNIT) -> None:
         self.name: str = name
-        self.value = value
+        self.value: int | float | str = value
         self.unit: Unit = unit
 
     def get_pretty_unit(self) -> str:
@@ -60,15 +62,17 @@ class Plant:
 
     # ~~~~~~~~ Getters ~~~~~~~~
     def get_height(self) -> float:
-        return self._get_attr("height")
+        height: float = self._get_attr("height")
+        return height
 
     def get_age(self) -> int:
-        return self._get_attr("age")
+        age: int = self._get_attr("age")
+        return age
 
     # this and the set function generalizations are overkill,
     # but this is a learning exercise
     # and i wanted to try out __dict__
-    def _get_attr(self, name: str):
+    def _get_attr(self, name: str) -> Any:
         return self.__dict__["_" + name].value
 
     # ~~~~~~~~ Setters ~~~~~~~~
@@ -79,14 +83,14 @@ class Plant:
     def set_age(self, age: int) -> None:
         self._set_attr("age", age)
 
-    def _set_attr(self, name: str, value) -> None:
+    def _set_attr(self, name: str, value: int | float) -> None:
         if self._abort_invalid_num(name, value):
             return
         attr: PlantAttr = self.__dict__["_" + name]
         attr.value = value
         print(f"{name.capitalize()} updated: {attr.value}{attr.get_pretty_unit()}")
 
-    def _abort_invalid_num(self, name: str, value) -> bool:
+    def _abort_invalid_num(self, name: str, value: int | float) -> bool:
         if value < 0:
             print(f"{self.name.capitalize()}: Error, {name} can't be negative")
             print(f"{name.capitalize()} update rejected")
