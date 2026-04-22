@@ -1,49 +1,104 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Plant helpers
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+class Unit:
+    def __init__(
+        self,
+        symbol: str = "",
+        separator: str = " ",
+        plural_s: bool = False,
+    ) -> None:
+        self.symbol: str = symbol
+        self.separator: str = separator
+        self.plural_s: bool = plural_s
+
+
+CM: Unit = Unit("cm", separator="")
+DAY: Unit = Unit("day", plural_s=True)
+NO_UNIT: Unit = Unit(separator="")
+
+
+class PlantAttr:
+    def __init__(self, name: str, value, unit: Unit = NO_UNIT) -> None:
+        self.name: str = name
+        self.value = value
+        self.unit: Unit = unit
+
+    def get_pretty_unit(self) -> str:
+        pretty_unit: str = f"{self.unit.separator}{self.unit.symbol}"
+        if self.unit.plural_s and self.value != 1:
+            pretty_unit += "s"
+        return pretty_unit
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Plant
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 class Plant:
     def __init__(self, name: str, height: float, age: int) -> None:
         self.name: str = name
-        self._height: float = 0
-        self._age: int = 0
-        self.set_height(height)
-        self.set_age(age)
+        self._height: PlantAttr = PlantAttr("height", round(float(height), 1), CM)
+        self._age: PlantAttr = PlantAttr("age", age, DAY)
         print("Plant created: ", end="")
         self.show()
 
+    # ~~~~~~~~ Show ~~~~~~~~
     def show(self) -> None:
         name_readout: str = f"{self.name.capitalize()}:"
-        height_readout: str = f"{self.get_formatted_height()},"
-        age_readout: str = f"{self.get_formatted_age()} old"
+        height_readout: str = f"{float(self._height.value):.1f}{self._height.get_pretty_unit()},"
+        age_readout: str = f"{self._age.value}{self._age.get_pretty_unit()} old"
 
         print(name_readout, height_readout, age_readout)
 
+    # ~~~~~~~~ Getters ~~~~~~~~
     def get_height(self) -> float:
-        return self._height
+        return self._get_attr("height")
 
     def get_age(self) -> int:
-        return self._age
+        return self._get_attr("age")
 
-    def get_formatted_height(self) -> str:
-        return f"{round(self.get_height(), 1)}cm"
+    # this and the set function generalizations are overkill,
+    # but this is a learning exercise
+    # and i wanted to try out __dict__
+    def _get_attr(self, name: str):
+        return self.__dict__["_" + name].value
 
-    def get_formatted_age(self) -> str:
-        value: int = self.get_age()
-        unit: str = "day" if value == 1 else "days"
-        return f"{value} {unit}"
+    # ~~~~~~~~ Setters ~~~~~~~~
 
     def set_height(self, height: float) -> None:
-        if height < 0:
-            print("Error, height can't be negative")
-            print("Update rejected")
-            return
-        self._height = height
-        print(f"Height updated: {self.get_formatted_height()}")
+        self._set_attr("height", round(height, 1))
 
     def set_age(self, age: int) -> None:
-        if age < 0:
-            print("Error, age can't be negative")
-            print("Update rejected")
+        self._set_attr("age", age)
+
+    def _set_attr(self, name: str, value) -> None:
+        if self._abort_invalid_num(name, value):
             return
-        self._age = age
-        print(f"Age updated: {self.get_formatted_age()}")
+        attr: PlantAttr = self.__dict__["_" + name]
+        attr.value = value
+        print(f"{name.capitalize()} updated: {attr.value}{attr.get_pretty_unit()}")
+
+    def _abort_invalid_num(self, name: str, value) -> bool:
+        if value < 0:
+            print(f"{self.name.capitalize()}: Error, {name} can't be negative")
+            print(f"{name.capitalize()} update rejected")
+            return True
+        return False
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Main
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 def main() -> None:
