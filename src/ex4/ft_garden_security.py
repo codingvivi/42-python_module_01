@@ -2,8 +2,6 @@
 #
 # Plant helpers
 #
-from typing import Any
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -70,18 +68,17 @@ class Plant:
 
     # ~~~~~~~~ Getters ~~~~~~~~
     def get_height(self) -> float:
-        height: float = self._get_attr("height")
-        return height
+        return float(self._get_attr("height"))
 
     def get_age(self) -> int:
-        age: int = self._get_attr("age")
-        return age
+        return int(self._get_attr("age"))
 
     # this and the set function generalizations are overkill,
     # but this is a learning exercise
     # and i wanted to try out __dict__
-    def _get_attr(self, name: str) -> Any:
-        return self.__dict__["_" + name].value
+    def _get_attr(self, name: str) -> int | float | str:
+        attr: PlantAttr = self.__dict__["_" + name]
+        return attr.value
 
     # ~~~~~~~~ Setters ~~~~~~~~
 

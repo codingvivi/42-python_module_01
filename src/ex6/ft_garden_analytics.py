@@ -3,7 +3,6 @@
 # Plant helpers
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-from typing import Any
 
 
 class Unit:
@@ -24,9 +23,11 @@ NO_UNIT: Unit = Unit(separator="")
 
 
 class PlantAttr:
-    def __init__(self, name: str, value: Any, unit: Unit = NO_UNIT) -> None:
+    def __init__(
+        self, name: str, value: int | float | str, unit: Unit = NO_UNIT
+    ) -> None:
         self.name: str = name
-        self.value: Any = value
+        self.value: int | float | str = value
         self.unit: Unit = unit
 
     def get_pretty_unit(self) -> str:
@@ -103,15 +104,14 @@ class Plant:
 
     # ~~~~~~~~ Getters ~~~~~~~~
     def get_height(self) -> float:
-        height: float = self._get_attr("height")
-        return height
+        return float(self._get_attr("height"))
 
     def get_age(self) -> int:
-        age: int = self._get_attr("age")
-        return age
+        return int(self._get_attr("age"))
 
-    def _get_attr(self, name: str) -> Any:
-        return self.__dict__["_" + name].value
+    def _get_attr(self, name: str) -> int | float | str:
+        attr: PlantAttr = self.__dict__["_" + name]
+        return attr.value
 
     # ~~~~~~~~ Setters ~~~~~~~~
     def set_height(self, height: float) -> None:
@@ -120,7 +120,7 @@ class Plant:
     def set_age(self, age: int) -> None:
         self._set_attr("age", age)
 
-    def _set_attr(self, name: str, value: Any) -> None:
+    def _set_attr(self, name: str, value: int | float) -> None:
         if self._abort_invalid_num(name, value):
             return
         attr: PlantAttr = self.__dict__["_" + name]
@@ -149,7 +149,7 @@ class Plant:
         if self._abort_invalid_num("days", days):
             return
         self._stats._agings += 1
-        self._age.value += days
+        self._age.value = int(self._age.value) + days
 
     def grow(
         self, days: int, growth_rates: tuple[float, ...] | None = None
@@ -158,9 +158,12 @@ class Plant:
             growth_rates = (1.0,) * days
         self._stats._growths += 1
         for d in range(1, days + 1):
-            self._age.value += 1
-            self._height.value += self.growth_speed * growth_rates[d - 1]
-        self._height.value = round(self._height.value, 1)
+            self._age.value = int(self._age.value) + 1
+            self._height.value = (
+                float(self._height.value)
+                + self.growth_speed * growth_rates[d - 1]
+            )
+        self._height.value = round(float(self._height.value), 1)
 
     # ~~~~~~~~ Helpers for children ~~~~~~~~
     def _ask_print(
@@ -285,9 +288,12 @@ class Vegetable(Plant):
             growth_rates = (1.0,) * days
         for d in range(days):
             super().age(1)
-            self._height.value += self.growth_speed * growth_rates[d]
+            self._height.value = (
+                float(self._height.value)
+                + self.growth_speed * growth_rates[d]
+            )
             self._increase_nutrition(1)
-        self._height.value = round(self._height.value, 1)
+        self._height.value = round(float(self._height.value), 1)
 
     def age(self, days: int) -> None:
         aging: PlantAttr = PlantAttr("age", days, DAY)
@@ -302,7 +308,7 @@ class Vegetable(Plant):
         )
 
     def _increase_nutrition(self, days: int) -> None:
-        self.nutrition.value += days
+        self.nutrition.value = int(self.nutrition.value) + days
 
 
 def display_stats(plant: Plant) -> None:
